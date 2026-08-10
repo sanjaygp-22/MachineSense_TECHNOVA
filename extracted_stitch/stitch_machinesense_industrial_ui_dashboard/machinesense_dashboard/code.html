@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - MachineSense</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#3b494c",
+                        "on-primary-fixed": "#001f24",
+                        "primary-fixed": "#9cf0ff",
+                        "surface-dim": "#0d1516",
+                        "surface-tint": "#00daf3",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-error": "#690005",
+                        "tertiary": "#ffeac0",
+                        "surface-container-high": "#242b2d",
+                        "inverse-primary": "#006875",
+                        "inverse-surface": "#dce4e5",
+                        "primary": "#c3f5ff",
+                        "on-background": "#dce4e5",
+                        "on-secondary-container": "#004d1b",
+                        "background": "#0d1516",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#69ff87",
+                        "tertiary-fixed-dim": "#f3bf26",
+                        "on-secondary-fixed": "#002108",
+                        "surface-bright": "#333a3c",
+                        "surface": "#0d1516",
+                        "outline": "#849396",
+                        "inverse-on-surface": "#2a3233",
+                        "surface-container-low": "#151d1e",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#2e3638",
+                        "primary-container": "#00e5ff",
+                        "primary-fixed-dim": "#00daf3",
+                        "secondary-container": "#02c953",
+                        "on-tertiary-container": "#6f5500",
+                        "tertiary-container": "#fec931",
+                        "surface-variant": "#2e3638",
+                        "secondary": "#40e56c",
+                        "surface-container-lowest": "#080f11",
+                        "on-primary": "#00363d",
+                        "on-secondary": "#003912",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface": "#dce4e5",
+                        "on-primary-fixed-variant": "#004f58",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary-container": "#00626e",
+                        "on-tertiary": "#3e2e00",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "surface-container": "#192122",
+                        "on-surface-variant": "#bac9cc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "48px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0E14; /* Specific instruction level 1 base */
+        }
+        
+        .glass-panel {
+            background: rgba(21, 29, 30, 0.7); /* surface-container-low approx */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Inner border technique */
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+        
+        .glow-accent {
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); /* Primary container glow */
+        }
+        
+        .glow-warning {
+            box-shadow: 0 0 15px rgba(254, 201, 49, 0.3); /* Tertiary container glow */
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.2); }
+        }
+        
+        /* Waveform simulation using SVG stroke dasharray */
+        .waveform-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawWave 4s linear infinite alternate;
+        }
+        @keyframes drawWave {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1516; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e3638; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b494c; 
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface font-body-md min-h-screen pb-24 md:pb-0 pt-16 selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-white/5 transition-colors p-2 rounded-full hidden md:block">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">hearing</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary">MachineSense</h1>
+</div>
+<!-- Web Nav (Hidden on Mobile) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="flex flex-col items-center justify-center text-primary font-bold drop-shadow-[0_0_8px_rgba(0,229,255,0.3)] hover:bg-white/5 transition-colors px-4 py-2 rounded-lg opacity-80 duration-200" href="#">
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 transition-colors px-4 py-2 rounded-lg" href="#">
+<span class="font-label-caps text-label-caps">Machines</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 transition-colors px-4 py-2 rounded-lg" href="#">
+<span class="font-label-caps text-label-caps">Analyze</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 transition-colors px-4 py-2 rounded-lg" href="#">
+<span class="font-label-caps text-label-caps">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-white/5 transition-colors px-4 py-2 rounded-lg" href="#">
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+<button class="text-primary dark:text-primary hover:bg-white/5 transition-colors p-2 rounded-full relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full pulse-dot"></span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-gutter">
+<!-- Welcome Header -->
+<div class="mb-gutter">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Good morning, <span class="text-primary">Engineer</span></h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">System health is stable. 1 active alert requires attention.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-4 md:grid-cols-12 gap-gutter">
+<!-- Overall Health Card -->
+<div class="col-span-4 md:col-span-5 glass-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle Gradient Background -->
+<div class="absolute inset-0 bg-gradient-to-br from-[#1C2128] to-[#161B22] opacity-50 z-0"></div>
+<div class="relative z-10 flex justify-between items-start">
+<h3 class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-wider">Overall Machine Health</h3>
+<span class="flex items-center gap-2 bg-surface-container py-1 px-3 rounded-full border border-white/5">
+<span class="w-2 h-2 rounded-full bg-secondary pulse-dot"></span>
+<span class="font-label-caps text-label-caps text-secondary">LIVE</span>
+</span>
+</div>
+<div class="relative z-10 flex items-center justify-center my-8">
+<!-- Circular Indicator SVG -->
+<div class="relative w-48 h-48 flex items-center justify-center glow-accent rounded-full">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background track -->
+<circle cx="50" cy="50" fill="transparent" r="45" stroke="rgba(255,255,255,0.05)" stroke-width="6"></circle>
+<!-- Progress ring -->
+<circle class="transition-all duration-1000 ease-out" cx="50" cy="50" fill="transparent" r="45" stroke="#00e5ff" stroke-dasharray="282.7" stroke-dashoffset="17" stroke-width="6"></circle>
+</svg>
+<div class="text-center">
+<span class="block font-headline-lg text-headline-lg text-primary tracking-tighter">94%</span>
+<span class="block font-data-mono text-data-mono text-on-surface-variant text-xs mt-1">OPTIMAL</span>
+</div>
+</div>
+</div>
+<button class="relative z-10 w-full bg-primary-container text-on-primary-container font-headline-md text-[18px] py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary transition-colors shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+                    Analyze Machine
+                </button>
+</div>
+<!-- Right Column Stack -->
+<div class="col-span-4 md:col-span-7 flex flex-col gap-gutter">
+<!-- Alert Banner -->
+<div class="glass-panel rounded-xl p-4 border-l-4 border-l-tertiary-container flex items-start gap-4 glow-warning bg-[#1C2128]/40">
+<span class="material-symbols-outlined text-tertiary-container mt-1" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex-1">
+<h4 class="font-headline-md text-body-lg text-tertiary-container">Vibration Anomaly Detected</h4>
+<p class="font-body-md text-on-surface-variant mt-1">Pump-02 (Plant B) is showing irregular sub-harmonic frequencies. Recommend acoustic analysis.</p>
+</div>
+<button class="text-primary hover:text-primary-container font-label-caps text-label-caps uppercase underline-offset-4 hover:underline self-center">View</button>
+</div>
+<!-- Active Machines List -->
+<div class="glass-panel rounded-xl p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-wider">Active Fleet (3)</h3>
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 overflow-y-auto pr-2" style="max-height: 300px;">
+<!-- Machine Item 1 -->
+<div class="bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors rounded-lg p-4 border border-white/5 flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 group-hover:border-secondary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 0;">precision_manufacturing</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">Motor-01</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary pulse-dot"></span>
+<span class="font-data-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Healthy</span>
+<span class="text-outline text-[10px]">•</span>
+<span class="font-data-mono text-[10px] text-outline uppercase">Plant A</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<span class="block font-data-mono text-data-mono text-secondary">96%</span>
+<span class="block font-data-mono text-[10px] text-outline">CONFIDENCE</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Machine Item 2 (Warning) -->
+<div class="bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors rounded-lg p-4 border border-tertiary-container/20 flex items-center justify-between group cursor-pointer relative overflow-hidden">
+<!-- Subtle warning glow behind item -->
+<div class="absolute -right-10 top-1/2 -translate-y-1/2 w-32 h-32 bg-tertiary-container/5 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/10 flex items-center justify-center border border-tertiary-container/30 group-hover:border-tertiary-container/60 transition-colors">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 0;">water_pump</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">Pump-02</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+<span class="font-data-mono text-[10px] text-tertiary-container uppercase tracking-wider">Warning</span>
+<span class="text-outline text-[10px]">•</span>
+<span class="font-data-mono text-[10px] text-outline uppercase">Plant B</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="text-right hidden sm:block">
+<span class="block font-data-mono text-data-mono text-tertiary-container">71%</span>
+<span class="block font-data-mono text-[10px] text-outline">CONFIDENCE</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Machine Item 3 -->
+<div class="bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors rounded-lg p-4 border border-white/5 flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 group-hover:border-secondary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 0;">compress</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">Compressor-03</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary pulse-dot"></span>
+<span class="font-data-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Healthy</span>
+<span class="text-outline text-[10px]">•</span>
+<span class="font-data-mono text-[10px] text-outline uppercase">Plant C</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<span class="block font-data-mono text-data-mono text-secondary">91%</span>
+<span class="block font-data-mono text-[10px] text-outline">CONFIDENCE</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Full Width Trend Chart Area -->
+<div class="col-span-4 md:col-span-12 glass-panel rounded-xl p-6 relative overflow-hidden min-h-[300px]">
+<!-- Subtle Gradient Background -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#161B22] to-transparent opacity-50 z-0"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<h3 class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-wider">Fleet Health Trend (7 Days)</h3>
+<div class="flex gap-2">
+<button class="font-label-caps text-[10px] px-2 py-1 rounded bg-white/5 text-on-surface border border-white/10 hover:bg-white/10">1D</button>
+<button class="font-label-caps text-[10px] px-2 py-1 rounded bg-primary/20 text-primary border border-primary/30 glow-accent">7D</button>
+<button class="font-label-caps text-[10px] px-2 py-1 rounded bg-white/5 text-on-surface border border-white/10 hover:bg-white/10">30D</button>
+</div>
+</div>
+<!-- Simulated Chart Area (Using SVG for aesthetic data viz) -->
+<div class="relative w-full h-[200px] z-10 flex items-end">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+</div>
+<!-- SVG Trend Line -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="trendGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#00e5ff" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#00e5ff" stop-opacity="0"></stop>
+</lineargradient>
+<filter id="glow">
+<fegaussianblur result="coloredBlur" stddeviation="2"></fegaussianblur>
+<femerge>
+<femergenode in="coloredBlur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<!-- Area Fill -->
+<path d="M0,80 Q10,70 20,75 T40,60 T60,65 T80,30 T100,40 L100,100 L0,100 Z" fill="url(#trendGrad)"></path>
+<!-- Line -->
+<path class="waveform-path" d="M0,80 Q10,70 20,75 T40,60 T60,65 T80,30 T100,40" fill="none" filter="url(#glow)" stroke="#00e5ff" stroke-width="1.5"></path>
+<!-- Data Points -->
+<circle cx="20" cy="75" fill="#0d1516" r="2" stroke="#00e5ff" stroke-width="1"></circle>
+<circle cx="40" cy="60" fill="#0d1516" r="2" stroke="#00e5ff" stroke-width="1"></circle>
+<circle cx="60" cy="65" fill="#0d1516" r="2" stroke="#00e5ff" stroke-width="1"></circle>
+<circle cx="80" cy="30" fill="#0d1516" r="2" stroke="#00e5ff" stroke-width="1"></circle>
+</svg>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 left-0 w-full flex justify-between transform translate-y-6 px-2">
+<span class="font-data-mono text-[10px] text-outline">Mon</span>
+<span class="font-data-mono text-[10px] text-outline">Tue</span>
+<span class="font-data-mono text-[10px] text-outline">Wed</span>
+<span class="font-data-mono text-[10px] text-outline">Thu</span>
+<span class="font-data-mono text-[10px] text-outline">Fri</span>
+<span class="font-data-mono text-[10px] text-outline">Sat</span>
+<span class="font-data-mono text-[10px] text-outline">Sun</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface-container-low/90 dark:bg-surface-container-low/90 backdrop-blur-lg rounded-t-xl border-t border-white/5 shadow-2xl">
+<a class="flex flex-col items-center justify-center text-primary-container font-bold drop-shadow-[0_0_8px_rgba(0,229,255,0.3)] scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">precision_manufacturing</span>
+<span class="font-label-caps text-label-caps">Machines</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">mic</span>
+<span class="font-label-caps text-label-caps">Analyze</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>

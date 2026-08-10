@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analyze Machine - MachineSense</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#3b494c",
+                        "on-primary-fixed": "#001f24",
+                        "primary-fixed": "#9cf0ff",
+                        "surface-dim": "#0d1516",
+                        "surface-tint": "#00daf3",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-error": "#690005",
+                        "tertiary": "#ffeac0",
+                        "surface-container-high": "#242b2d",
+                        "inverse-primary": "#006875",
+                        "inverse-surface": "#dce4e5",
+                        "primary": "#c3f5ff",
+                        "on-background": "#dce4e5",
+                        "on-secondary-container": "#004d1b",
+                        "background": "#0d1516",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#69ff87",
+                        "tertiary-fixed-dim": "#f3bf26",
+                        "on-secondary-fixed": "#002108",
+                        "surface-bright": "#333a3c",
+                        "surface": "#0d1516",
+                        "outline": "#849396",
+                        "inverse-on-surface": "#2a3233",
+                        "surface-container-low": "#151d1e",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#2e3638",
+                        "primary-container": "#00e5ff",
+                        "primary-fixed-dim": "#00daf3",
+                        "secondary-container": "#02c953",
+                        "on-tertiary-container": "#6f5500",
+                        "tertiary-container": "#fec931",
+                        "surface-variant": "#2e3638",
+                        "secondary": "#40e56c",
+                        "surface-container-lowest": "#080f11",
+                        "on-primary": "#00363d",
+                        "on-secondary": "#003912",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface": "#dce4e5",
+                        "on-primary-fixed-variant": "#004f58",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary-container": "#00626e",
+                        "on-tertiary": "#3e2e00",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "surface-container": "#192122",
+                        "on-surface-variant": "#bac9cc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "48px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        
+        .glass-panel {
+            background: rgba(13, 21, 22, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24 md:pb-0 overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 flat no shadows">
+<button class="text-primary dark:text-primary hover:bg-white/5 transition-colors p-2 rounded-full focus:outline-none">
+<span class="material-symbols-outlined">hearing</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary">MachineSense</h1>
+<button class="text-primary dark:text-primary hover:bg-white/5 transition-colors p-2 rounded-full focus:outline-none">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="pt-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-[calc(100vh-64px)] flex flex-col justify-between">
+<!-- Header & Selector -->
+<div class="flex flex-col gap-6 md:flex-row md:justify-between md:items-start mb-8">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-on-surface mb-2">Analyze Machine</h2>
+<p class="font-body-md text-on-surface-variant">Real-time acoustic diagnostic analysis.</p>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between min-w-[240px] cursor-pointer hover:bg-surface-bright/50 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed-dim">precision_manufacturing</span>
+<div>
+<div class="font-label-caps text-label-caps text-on-surface-variant">TARGET ASSET</div>
+<div class="font-data-mono text-data-mono text-primary font-bold">Motor-01</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Central Analysis UI -->
+<div class="flex-grow flex flex-col items-center justify-center relative">
+<!-- Environment Noise Indicator -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 flex items-center gap-2 glass-panel px-4 py-2 rounded-full">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
+</span>
+<span class="font-data-mono text-data-mono text-secondary">ENV NOISE: LOW</span>
+</div>
+<!-- Main Mic Button -->
+<div class="relative flex items-center justify-center my-12 group cursor-pointer">
+<!-- Outer Rings -->
+<div class="absolute w-64 h-64 rounded-full border border-primary-container/20 pulse-ring"></div>
+<div class="absolute w-56 h-56 rounded-full border border-primary-container/40 animate-[spin_10s_linear_infinite] border-dashed"></div>
+<!-- Core Button -->
+<button class="relative w-40 h-40 rounded-full bg-surface-container-highest border-2 border-primary-container flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.2)] group-hover:shadow-[0_0_50px_rgba(0,229,255,0.4)] transition-all duration-300 z-10 overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/10 group-hover:bg-primary-container/20 transition-colors"></div>
+<span class="material-symbols-outlined text-primary-container text-[64px] icon-fill">mic</span>
+</button>
+</div>
+<!-- Status Text -->
+<div class="text-center mt-8">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Ready to analyze</h3>
+<p class="font-body-md text-on-surface-variant max-w-sm mx-auto">Place phone near machine. Maintain a distance of 10-15cm for optimal acoustic capture.</p>
+</div>
+</div>
+<!-- Instruction Card -->
+<div class="glass-panel p-6 rounded-xl mt-8 mb-4 border-l-4 border-primary-container">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container mt-1">info</span>
+<div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-1">RECORDING INSTRUCTIONS</h4>
+<p class="font-data-mono text-data-mono text-on-surface-variant">Ensure safety protocols are active. Do not place device on moving parts. Analysis requires 10 seconds of continuous audio data.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface-container-low/90 dark:bg-surface-container-low/90 backdrop-blur-lg border-t border-white/5 rounded-t-xl shadow-2xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1">precision_manufacturing</span>
+<span class="font-label-caps text-label-caps">Machines</span>
+</a>
+<!-- Active Tab -->
+<a class="flex flex-col items-center justify-center text-primary-container font-bold drop-shadow-[0_0_8px_rgba(0,229,255,0.3)] opacity-80 duration-200 scale-95" href="#">
+<span class="material-symbols-outlined mb-1 icon-fill">mic</span>
+<span class="font-label-caps text-label-caps">Analyze</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary-fixed transition-all" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>
