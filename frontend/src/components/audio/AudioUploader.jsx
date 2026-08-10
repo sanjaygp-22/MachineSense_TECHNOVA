@@ -50,6 +50,11 @@ export default function AudioUploader({ onAnalyzeFile }) {
       return;
     }
 
+    console.log("STEP 1: file selected");
+    console.log("Selected file name:", file.name);
+    console.log("File size:", file.size, "bytes");
+    console.log("File type:", file.type || "audio/wav");
+
     // Clean up previous URL if any
     if (currentObjectUrlRef.current) {
       URL.revokeObjectURL(currentObjectUrlRef.current);
@@ -143,6 +148,7 @@ export default function AudioUploader({ onAnalyzeFile }) {
 
   const handleAnalyze = () => {
     if (!fileInfo) return;
+    console.log("STEP 2: audio captured", fileInfo.name);
     setIsProcessing(true);
     if (fileInfo.rawFile) {
       setActiveAudioFile(fileInfo.rawFile);

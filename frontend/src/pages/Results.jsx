@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopNavigation from '../components/layout/TopNavigation';
 import BottomNavigation from '../components/layout/BottomNavigation';
@@ -37,6 +37,14 @@ export default function Results() {
   const abnormalProbPct = (prediction.abnormal_probability * 100).toFixed(1);
   const normalProbPct = (prediction.normal_probability * 100).toFixed(1);
   const confidencePct = (Math.max(prediction.normal_probability, prediction.abnormal_probability) * 100).toFixed(1);
+
+  useEffect(() => {
+    console.log("STEP 7: result displayed");
+    console.log("Final Machine Prediction Label:", prediction.label.toUpperCase());
+    console.log("Abnormal Probability:", abnormalProbPct + "%");
+    console.log("Normal Probability:", normalProbPct + "%");
+    console.log("AI Confidence:", confidencePct + "%");
+  }, [prediction, abnormalProbPct, normalProbPct, confidencePct]);
 
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container pt-16 pb-24 md:pb-8">

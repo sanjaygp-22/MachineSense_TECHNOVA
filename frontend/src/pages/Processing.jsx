@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopNavigation from '../components/layout/TopNavigation';
 import BottomNavigation from '../components/layout/BottomNavigation';
@@ -18,12 +18,8 @@ export default function Processing() {
 
   const [activeStep, setActiveStep] = useState(0); // 0..4
   const [errorMessage, setErrorMessage] = useState(null);
-  const isExecutingRef = useRef(false);
 
   useEffect(() => {
-    if (isExecutingRef.current) return;
-    isExecutingRef.current = true;
-
     let isMounted = true;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout guard
@@ -35,21 +31,29 @@ export default function Processing() {
           throw new Error('No valid audio file selected. Please return to upload and choose a WAV recording.');
         }
 
-        // Step 0: Uploading & Audio Captured
-        console.log('--- MACHINESENSE FRONTEND ANALYSIS START ---');
-        console.log('Uploading file:', rawFile.name, `(${rawFile.size} bytes, type: ${rawFile.type || 'audio/wav'})`);
-        console.log('API URL:', `${API_URL}/api/analyze`);
-        console.log('Request started');
-
+        // STEP 2 Verification: Audio Captured
+        console.log('STEP 2: audio captured');
+        console.log('Selected file name:', rawFile.name);
+        console.log('File size:', rawFile.size, 'bytes');
+        console.log('File type:', rawFile.type || 'audio/wav');
         if (isMounted) setActiveStep(0); // Audio captured
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 150));
 
-        // Step 1: Processing / Noise Filtering
+        // STEP 3: Starting Noise Filtering
+        console.log('STEP 3: starting noise filtering');
         if (isMounted) setActiveStep(1); // Noise filtering
         await new Promise((r) => setTimeout(r, 200));
 
-        // Step 2: Frequency Analysis
-        if (isMounted) setActiveStep(2); // Frequency analysis
+        // STEP 4: Noise Filtering Complete
+        console.log('STEP 4: noise filtering complete');
+        if (isMounted) setActiveStep(2); // Frequency analysis / Feature extraction
+        await new Promise((r) => setTimeout(r, 150));
+
+        // STEP 5: Starting API Request
+        console.log('STEP 5: starting API request');
+        console.log('API URL:', `${API_URL}/api/analyze`);
+        console.log('Request start');
+        if (isMounted) setActiveStep(3); // ML Analysis
 
         const formData = new FormData();
         formData.append('audio', rawFile, rawFile.name || 'recording.wav');
@@ -80,13 +84,10 @@ export default function Processing() {
           throw new Error(detailMsg);
         }
 
-        // Step 3: Acoustic Pattern Extraction & AI Anomaly Detection
-        if (isMounted) setActiveStep(3); // Acoustic pattern extraction
-        await new Promise((r) => setTimeout(r, 150));
-
+        // STEP 6: API Response Received
         const resultData = await response.json();
-        console.log('Response data:', resultData);
-        console.log('--- MACHINESENSE FRONTEND ANALYSIS COMPLETED ---');
+        console.log('STEP 6: API response received');
+        console.log('Response JSON:', resultData);
 
         if (isMounted) setActiveStep(4); // AI Anomaly Detection Completed
         await new Promise((r) => setTimeout(r, 150));
