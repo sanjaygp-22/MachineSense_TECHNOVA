@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import CORS_ORIGINS
 from app.routes.health import router as health_router
 from app.routes.analysis import router as analysis_router
+from app.services.ml_service import get_ml_service
 
 app = FastAPI(
     title="MachineSense Backend",
@@ -18,6 +19,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+def startup_event():
+    print("[FastAPI] Pre-loading & warming up Machine-Invariant ML Pipeline...")
+    get_ml_service()
 
 # Mount API routers under /api
 app.include_router(health_router, prefix="/api", tags=["Health"])

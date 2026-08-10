@@ -49,7 +49,12 @@ class MLService:
             self.feature_names = self.metadata.get("feature_names", [])
             self.is_model_loaded = True
             self.load_error = None
-            print(f"[MLService] Production model pipeline successfully loaded ({len(self.feature_names)} features).")
+
+            # Warmup JIT & Librosa routines during startup
+            dummy_y = np.zeros(16000, dtype=np.float32)
+            _ = extract_acoustic_features(dummy_y, 16000)
+
+            print(f"[MLService] Production model pipeline successfully loaded & warmed up ({len(self.feature_names)} features).")
         except Exception as e:
             self.is_model_loaded = False
             self.load_error = str(e)
