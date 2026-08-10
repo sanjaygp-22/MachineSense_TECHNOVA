@@ -5,13 +5,15 @@ import BottomNavigation from '../components/layout/BottomNavigation';
 import AmbientShader from '../components/layout/AmbientShader';
 import { machinesData } from '../data/mockData';
 import { API_URL } from '../config';
+import { getActiveAudioFile, clearActiveAudioFile } from '../utils/audioStore';
 
 export default function Processing() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const rawFile = location.state?.rawFile;
-  const machineId = location.state?.machineId || 'motor-01';
+  // Retrieve File object safely from memory store or location.state fallback
+  const rawFile = getActiveAudioFile() || location.state?.rawFile;
+  const machineId = location.state?.machineId || 'id_00';
   const machine = machinesData.find((m) => m.id === machineId) || machinesData[0];
 
   const [activeStep, setActiveStep] = useState(0); // 0..4
@@ -24,50 +26,73 @@ export default function Processing() {
 
     let isMounted = true;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout guard
 
     const executeAnalysis = async () => {
       try {
-        if (!rawFile) {
-          throw new Error('No audio file provided. Please select a valid WAV audio file.');
+        if (!rawFile || !(rawFile instanceof Blob || rawFile instanceof File)) {
+          console.error("Audio Processing Error: rawFile is invalid or missing:", rawFile);
+          throw new Error('No valid audio file selected. Please return to upload and choose a WAV recording.');
         }
 
-        // Animate checklist progress
-        if (isMounted) setActiveStep(1); // Audio captured
-        await new Promise((r) => setTimeout(r, 400));
-        if (isMounted) setActiveStep(2); // Noise filtering
-        await new Promise((r) => setTimeout(r, 400));
-        if (isMounted) setActiveStep(3); // Frequency analysis
+        // Step 0: Uploading & Audio Captured
+        console.log('--- MACHINESENSE FRONTEND ANALYSIS START ---');
+        console.log('Uploading file:', rawFile.name, `(${rawFile.size} bytes, type: ${rawFile.type || 'audio/wav'})`);
+        console.log('API URL:', `${API_URL}/api/analyze`);
+        console.log('Request started');
+
+        if (isMounted) setActiveStep(0); // Audio captured
+        await new Promise((r) => setTimeout(r, 200));
+
+        // Step 1: Processing / Noise Filtering
+        if (isMounted) setActiveStep(1); // Noise filtering
+        await new Promise((r) => setTimeout(r, 200));
+
+        // Step 2: Frequency Analysis
+        if (isMounted) setActiveStep(2); // Frequency analysis
 
         const formData = new FormData();
-        formData.append('audio', rawFile);
+        formData.append('audio', rawFile, rawFile.name || 'recording.wav');
         formData.append('machine_id', machineId);
 
+        const t_start_fetch = performance.now();
         const response = await fetch(`${API_URL}/api/analyze`, {
           method: 'POST',
           body: formData,
           signal: controller.signal
         });
+        const t_end_fetch = performance.now();
 
         clearTimeout(timeoutId);
+        console.log('Response status:', response.status);
+        console.log(`HTTP Request duration: ${(t_end_fetch - t_start_fetch).toFixed(2)} ms`);
 
         if (!response.ok) {
-          let detailMsg = 'Analysis failed. Please try again.';
+          let detailMsg = `Server returned status ${response.status}.`;
           try {
             const errJson = await response.json();
             if (errJson.detail) {
               detailMsg = errJson.detail;
             }
           } catch (e) {
-            detailMsg = `Server error (${response.status}).`;
+            // Keep default status message
           }
           throw new Error(detailMsg);
         }
 
-        if (isMounted) setActiveStep(4); // AI anomaly detection
-        await new Promise((r) => setTimeout(r, 400));
+        // Step 3: Acoustic Pattern Extraction & AI Anomaly Detection
+        if (isMounted) setActiveStep(3); // Acoustic pattern extraction
+        await new Promise((r) => setTimeout(r, 150));
 
         const resultData = await response.json();
+        console.log('Response data:', resultData);
+        console.log('--- MACHINESENSE FRONTEND ANALYSIS COMPLETED ---');
+
+        if (isMounted) setActiveStep(4); // AI Anomaly Detection Completed
+        await new Promise((r) => setTimeout(r, 150));
+
+        // Clear active memory store upon success
+        clearActiveAudioFile();
 
         if (isMounted) {
           navigate('/results', {
@@ -81,11 +106,12 @@ export default function Processing() {
         if (!isMounted) return;
         clearTimeout(timeoutId);
 
+        console.error('Frontend Processing Failure:', err);
         let userFriendlyMsg = err.message || 'An unexpected error occurred during audio processing.';
         if (err.name === 'AbortError') {
-          userFriendlyMsg = 'Analysis request timed out after 20 seconds. Please check your network connection and retry.';
+          userFriendlyMsg = 'Analysis request timed out after 25 seconds. Please check backend status and retry.';
         } else if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
-          userFriendlyMsg = `Unable to connect to FastAPI backend at ${API_URL}. Please ensure the server is active.`;
+          userFriendlyMsg = `Unable to connect to FastAPI backend at ${API_URL}. Please ensure the backend server is running.`;
         }
 
         setErrorMessage(userFriendlyMsg);
@@ -122,7 +148,10 @@ export default function Processing() {
                   {errorMessage}
                 </p>
                 <button
-                  onClick={() => navigate('/analyze')}
+                  onClick={() => {
+                    clearActiveAudioFile();
+                    navigate('/analyze');
+                  }}
                   className="mt-4 px-6 py-2.5 rounded-lg bg-primary-container text-on-primary-container font-label-caps text-label-caps hover:bg-primary-fixed transition-colors shadow-lg cursor-pointer"
                 >
                   Return to Upload

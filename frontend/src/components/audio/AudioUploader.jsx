@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import AudioFileCard from './AudioFileCard';
+import { setActiveAudioFile } from '../../utils/audioStore';
 
 const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
 const ALLOWED_EXTENSIONS = ['wav', 'mp3', 'flac', 'm4a'];
@@ -56,6 +57,9 @@ export default function AudioUploader({ onAnalyzeFile }) {
 
     const objectUrl = URL.createObjectURL(file);
     currentObjectUrlRef.current = objectUrl;
+
+    // Save in memory store
+    setActiveAudioFile(file);
 
     // Load metadata to extract duration
     const audio = new Audio();
@@ -131,6 +135,7 @@ export default function AudioUploader({ onAnalyzeFile }) {
     setSelectedFile(null);
     setFileInfo(null);
     setError('');
+    setActiveAudioFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -139,6 +144,9 @@ export default function AudioUploader({ onAnalyzeFile }) {
   const handleAnalyze = () => {
     if (!fileInfo) return;
     setIsProcessing(true);
+    if (fileInfo.rawFile) {
+      setActiveAudioFile(fileInfo.rawFile);
+    }
     if (onAnalyzeFile) {
       onAnalyzeFile(fileInfo);
     }
